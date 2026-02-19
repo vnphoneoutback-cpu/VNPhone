@@ -52,10 +52,10 @@ export default function PriceSummary({
   });
 
   return (
-    <div className="overflow-hidden rounded-3xl bg-brand-navy shadow-lg">
+    <div className="overflow-hidden rounded-[28px] border border-brand-navy/10 bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-navy shadow-[0_22px_50px_rgba(20,29,69,0.35)]">
       {/* Main content */}
       <div className="px-6 pb-5 pt-6 text-center">
-        <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-500">
+        <div className="text-[10px] font-semibold uppercase tracking-[0.2em] text-white/45">
           สรุปราคา
         </div>
 
@@ -63,10 +63,10 @@ export default function PriceSummary({
           {formatModelName(product.model)}
         </div>
 
-        <div className="mt-1 text-sm text-gray-400">
+        <div className="mt-1 text-sm text-white/65">
           {product.storage}
           {quantity > 1 && (
-            <span className="text-gray-500">
+            <span className="text-white/45">
               {" "}
               &times; {quantity} เครื่อง
             </span>
@@ -74,7 +74,7 @@ export default function PriceSummary({
         </div>
 
         {/* Price highlight */}
-        <div className="mx-auto mt-5 max-w-[240px] rounded-2xl bg-brand-yellow px-5 py-4">
+        <div className="mx-auto mt-5 max-w-[250px] rounded-2xl border border-brand-yellow/40 bg-brand-yellow px-5 py-4 shadow-[0_12px_24px_rgba(255,193,7,0.35)]">
           <div className="text-[34px] font-black leading-none tracking-tight text-brand-navy">
             {totalPrice.toLocaleString()}
           </div>
@@ -84,19 +84,19 @@ export default function PriceSummary({
         </div>
 
         {quantity > 1 && (
-          <div className="mt-2.5 text-[11px] text-gray-500">
+          <div className="mt-2.5 text-[11px] text-white/45">
             เครื่องละ {product.price.toLocaleString()} บาท
           </div>
         )}
 
         {/* Meta */}
-        <div className="mt-4 flex items-center justify-center gap-2 text-[10px] text-gray-600">
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-[10px] text-white/45">
           <span>{thaiDate}</span>
-          <span className="text-gray-700">&middot;</span>
+          <span className="text-white/35">&middot;</span>
           <span>{thaiTime}</span>
           {userName && (
             <>
-              <span className="text-gray-700">&middot;</span>
+              <span className="text-white/35">&middot;</span>
               <span>{userName}</span>
             </>
           )}
@@ -106,7 +106,7 @@ export default function PriceSummary({
       {/* CTA */}
       <a
         href="tel:099-439-5550"
-        className="flex items-center justify-center gap-2.5 bg-white/8 py-3.5 transition-colors hover:bg-white/12"
+        className="flex items-center justify-center gap-2.5 bg-white/10 py-3.5 transition-colors hover:bg-white/15"
       >
         <svg
           className="h-4 w-4 text-brand-yellow"

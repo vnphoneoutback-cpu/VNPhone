@@ -2,6 +2,7 @@
 
 :root {
   --background: #f5f5f7;
+  --background-soft: #eef2fb;
   --foreground: #1a1a2e;
   --brand-yellow: #FFC107;
   --brand-yellow-light: #FFF8E1;
@@ -32,7 +33,9 @@ html {
 }
 
 body {
-  background: var(--background);
+  background:
+    radial-gradient(circle at 50% -10%, rgba(255, 193, 7, 0.16), transparent 45%),
+    linear-gradient(180deg, var(--background) 0%, var(--background-soft) 100%);
   color: var(--foreground);
   font-family: var(--font-sans), "Noto Sans Thai", -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -99,6 +102,15 @@ input[type="number"] {
   }
 }
 
+@keyframes float-soft {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-4px);
+  }
+}
+
 .animate-fade-in-up {
   animation: fadeInUp 0.35s ease-out forwards;
 }
@@ -111,8 +123,21 @@ input[type="number"] {
   animation: pulse-glow 2.5s ease-in-out infinite;
 }
 
+.animate-float-soft {
+  animation: float-soft 4s ease-in-out infinite;
+}
+
 .skeleton {
   background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }

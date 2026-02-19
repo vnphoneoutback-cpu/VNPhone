@@ -65,7 +65,7 @@ export default function PhonePicker() {
   const [selectedModel, setSelectedModel] = useState<string>("");
   const [selectedStorage, setSelectedStorage] = useState<string>("");
   const [quantity, setQuantity] = useState(1);
-  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+  const lastLoggedProductIdRef = useRef<string | null>(null);
 
   /* ── Fetch products ── */
   useEffect(() => {
@@ -135,6 +135,19 @@ export default function PhonePicker() {
     [products, selectedBrand, selectedModel]
   );
 
+  const selectedProduct = useMemo(() => {
+    if (!selectedBrand || !selectedModel || !selectedStorage) return null;
+
+    return (
+      products.find(
+        (p) =>
+          p.brand === selectedBrand &&
+          p.model === selectedModel &&
+          p.storage === selectedStorage
+      ) || null
+    );
+  }, [products, selectedBrand, selectedModel, selectedStorage]);
+
   /* ── Auto-resolve product + log ── */
   const logPriceCheck = useCallback(
     async (product: Product) => {
@@ -154,27 +167,25 @@ export default function PhonePicker() {
   );
 
   useEffect(() => {
-    if (selectedBrand && selectedModel && selectedStorage) {
-      const product = products.find(
-        (p) =>
-          p.brand === selectedBrand &&
-          p.model === selectedModel &&
-          p.storage === selectedStorage
-      );
-      if (product) {
-        setSelectedProduct(product);
-        logPriceCheck(product);
-        setTimeout(() => {
-          resultRef.current?.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-          });
-        }, 150);
-      }
-    } else {
-      setSelectedProduct(null);
+    if (!selectedProduct) {
+      lastLoggedProductIdRef.current = null;
+      return;
     }
-  }, [selectedBrand, selectedModel, selectedStorage, products, logPriceCheck]);
+
+    if (lastLoggedProductIdRef.current !== selectedProduct.id) {
+      logPriceCheck(selectedProduct);
+      lastLoggedProductIdRef.current = selectedProduct.id;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      resultRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+      });
+    }, 150);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [selectedProduct, logPriceCheck]);
 
   /* ── Handlers ── */
   const handleBrandChange = (brand: string) => {
@@ -217,14 +228,15 @@ export default function PhonePicker() {
   /* ── Loading ── */
   if (loading) {
     return (
-      <div className="rounded-3xl bg-white p-5 shadow-sm">
-        <div className="flex rounded-2xl bg-gray-100 p-1.5">
-          <div className="skeleton h-10 flex-1 rounded-xl" />
-          <div className="skeleton h-10 flex-1 rounded-xl" />
+      <div className="rounded-[28px] border border-brand-navy/10 bg-white/90 p-5 shadow-[0_16px_36px_rgba(30,42,94,0.12)] backdrop-blur-sm">
+        <div className="mb-3 h-3 w-28 rounded-full bg-gray-100" />
+        <div className="flex rounded-2xl bg-brand-navy/5 p-1.5">
+          <div className="skeleton h-11 flex-1 rounded-xl" />
+          <div className="skeleton h-11 flex-1 rounded-xl" />
         </div>
         <div className="mt-4 grid grid-cols-2 gap-2.5">
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="skeleton h-24 rounded-2xl" />
+            <div key={i} className="skeleton h-28 rounded-2xl" />
           ))}
         </div>
       </div>
@@ -233,18 +245,21 @@ export default function PhonePicker() {
 
   /* ── Render ── */
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       {/* ━━ Brand Tabs ━━ */}
-      <div className="rounded-3xl bg-white p-5 shadow-sm">
-        <div className="flex rounded-2xl bg-gray-100 p-1.5">
+      <div className="rounded-[28px] border border-brand-navy/10 bg-white/92 p-5 shadow-[0_18px_40px_rgba(30,42,94,0.13)] backdrop-blur-sm">
+        <div className="mb-3 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-navy/45">
+          เลือกแบรนด์
+        </div>
+        <div className="flex rounded-2xl bg-brand-navy/5 p-1.5">
           {brands.map((b) => (
             <button
               key={b}
               onClick={() => handleBrandChange(b)}
               className={`flex-1 rounded-xl py-2.5 text-sm font-bold transition-all duration-300 ${
                 selectedBrand === b
-                  ? "bg-brand-navy text-white shadow-sm"
-                  : "text-gray-400 hover:text-gray-600"
+                  ? "bg-brand-navy text-white shadow-[0_8px_20px_rgba(30,42,94,0.35)]"
+                  : "text-brand-navy/45 hover:text-brand-navy/70"
               }`}
             >
               {b === "IPHONE" ? "iPhone" : "iPad"}
@@ -258,32 +273,32 @@ export default function PhonePicker() {
             <button
               key={model}
               onClick={() => handleModelChange(model)}
-              className={`group rounded-2xl border-2 p-3.5 text-left transition-all duration-200 ${
+              className={`group rounded-2xl border p-3.5 text-left transition-all duration-200 ${
                 selectedModel === model
-                  ? "border-brand-yellow bg-brand-yellow-light shadow-sm"
-                  : "border-transparent bg-[#f8f8fa] hover:border-gray-200 hover:shadow-sm"
+                  ? "border-brand-navy/20 bg-white shadow-[0_10px_24px_rgba(30,42,94,0.12)] ring-2 ring-brand-yellow/65"
+                  : "border-brand-navy/5 bg-[#f8f9ff] hover:border-brand-navy/20 hover:bg-white hover:shadow-sm"
               }`}
               style={{ animationDelay: `${idx * 30}ms` }}
             >
               <div
                 className={`text-[15px] font-extrabold leading-tight ${
-                  selectedModel === model ? "text-brand-navy" : "text-gray-800"
+                  selectedModel === model ? "text-brand-navy" : "text-brand-navy/85"
                 }`}
               >
                 {getShortName(selectedBrand, model)}
               </div>
               <div className="mt-2 flex items-baseline gap-1">
-                <span className="text-[10px] text-gray-400">เริ่มต้น</span>
+                <span className="text-[10px] text-brand-navy/40">เริ่มต้น</span>
                 <span
                   className={`text-sm font-bold ${
                     selectedModel === model
                       ? "text-brand-navy"
-                      : "text-gray-600"
+                      : "text-brand-navy/70"
                   }`}
                 >
                   {minPrice.toLocaleString()}
                 </span>
-                <span className="text-[10px] text-gray-400">฿</span>
+                <span className="text-[10px] text-brand-navy/40">฿</span>
               </div>
               {ms.length > 1 && (
                 <div className="mt-1.5 flex items-center gap-1">
@@ -291,14 +306,14 @@ export default function PhonePicker() {
                     className={`h-1 w-1 rounded-full ${
                       selectedModel === model
                         ? "bg-brand-navy/40"
-                        : "bg-gray-300"
+                        : "bg-brand-navy/20"
                     }`}
                   />
                   <span
                     className={`text-[10px] ${
                       selectedModel === model
                         ? "text-brand-navy/50"
-                        : "text-gray-300"
+                        : "text-brand-navy/35"
                     }`}
                   >
                     {ms.length} ความจุ
@@ -314,11 +329,11 @@ export default function PhonePicker() {
       {selectedModel && (
         <div
           ref={configRef}
-          className="animate-fade-in-up rounded-3xl bg-white p-5 shadow-sm"
+          className="animate-fade-in-up rounded-[28px] border border-brand-navy/10 bg-white/92 p-5 shadow-[0_18px_40px_rgba(30,42,94,0.13)] backdrop-blur-sm"
         >
           {/* Selected model label */}
           <div className="mb-4 text-center">
-            <span className="inline-block rounded-full bg-brand-navy px-4 py-1.5 text-xs font-bold text-white">
+            <span className="inline-block rounded-full bg-brand-navy px-4 py-1.5 text-xs font-bold text-brand-yellow shadow-[0_8px_20px_rgba(30,42,94,0.3)]">
               {formatModelName(selectedModel)}
             </span>
           </div>
@@ -326,7 +341,7 @@ export default function PhonePicker() {
           {/* Storage */}
           {storages.length > 1 && (
             <div>
-              <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              <div className="mb-2.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-navy/45">
                 เลือกความจุ
               </div>
               <div className="flex gap-2">
@@ -336,8 +351,8 @@ export default function PhonePicker() {
                     onClick={() => handleStorageChange(s)}
                     className={`flex-1 rounded-xl py-3 text-sm font-bold transition-all duration-200 ${
                       selectedStorage === s
-                        ? "bg-brand-yellow text-brand-navy shadow-sm"
-                        : "bg-[#f8f8fa] text-gray-500 hover:bg-gray-100"
+                        ? "bg-brand-yellow text-brand-navy shadow-[0_10px_22px_rgba(255,193,7,0.35)]"
+                        : "bg-brand-navy/5 text-brand-navy/60 hover:bg-brand-navy/10"
                     }`}
                   >
                     {s}
@@ -350,15 +365,15 @@ export default function PhonePicker() {
           {/* Quantity */}
           {selectedStorage && (
             <div
-              className={`flex items-center justify-between ${storages.length > 1 ? "mt-4 border-t border-gray-100 pt-4" : ""}`}
+              className={`flex items-center justify-between ${storages.length > 1 ? "mt-4 border-t border-brand-navy/10 pt-4" : ""}`}
             >
-              <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand-navy/45">
                 จำนวน
               </span>
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0f0f2] text-base font-bold text-gray-500 transition hover:bg-gray-200 active:scale-90"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-navy/10 bg-brand-navy/5 text-base font-bold text-brand-navy/70 transition hover:bg-brand-navy/10 active:scale-90"
                 >
                   −
                 </button>
@@ -367,11 +382,11 @@ export default function PhonePicker() {
                 </span>
                 <button
                   onClick={() => setQuantity(quantity + 1)}
-                  className="flex h-9 w-9 items-center justify-center rounded-full bg-[#f0f0f2] text-base font-bold text-gray-500 transition hover:bg-gray-200 active:scale-90"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-brand-navy/10 bg-brand-navy/5 text-base font-bold text-brand-navy/70 transition hover:bg-brand-navy/10 active:scale-90"
                 >
                   +
                 </button>
-                <span className="text-[11px] text-gray-400">เครื่อง</span>
+                <span className="text-[11px] text-brand-navy/45">เครื่อง</span>
               </div>
             </div>
           )}

@@ -43,20 +43,20 @@ export default function AuthButton() {
   };
 
   if (loading) {
-    return <div className="h-7 w-16 animate-pulse rounded-lg bg-white/10" />;
+    return <div className="h-8 w-20 animate-pulse rounded-xl bg-white/10" />;
   }
 
   if (user) {
     return (
-      <div className="flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-yellow text-[10px] font-bold text-brand-navy">
+      <div className="flex items-center gap-2.5 rounded-full border border-white/15 bg-white/5 px-2 py-1">
+        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-yellow text-[10px] font-bold text-brand-navy">
           {(user.user_metadata?.full_name || user.email || "U")
             .charAt(0)
             .toUpperCase()}
         </div>
         <button
           onClick={handleLogout}
-          className="rounded-md px-2 py-1 text-[10px] font-medium text-white/50 transition hover:text-white/80"
+          className="rounded-md px-1.5 py-1 text-[10px] font-semibold text-white/65 transition hover:text-white"
         >
           ออก
         </button>
@@ -67,7 +67,7 @@ export default function AuthButton() {
   return (
     <button
       onClick={handleLogin}
-      className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/70 transition hover:bg-white/15 hover:text-white"
+      className="flex items-center gap-1.5 rounded-xl border border-white/20 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/80 transition hover:bg-white/15 hover:text-white"
     >
       <svg className="h-3 w-3" viewBox="0 0 24 24">
         <path

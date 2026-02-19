@@ -6,24 +6,26 @@ import PhonePicker from "@/components/PhonePicker";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-[#f5f5f7]">
+    <div className="relative min-h-screen overflow-x-clip bg-[#f2f4fb] text-brand-navy">
+      <BackgroundAura />
+
       {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-white/10 bg-brand-navy">
-        <div className="mx-auto flex max-w-xl items-center justify-between px-4 py-2.5">
+      <header className="sticky top-0 z-50 border-b border-brand-navy/10 bg-brand-navy/90 backdrop-blur-xl">
+        <div className="mx-auto flex max-w-xl items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2.5">
             <Image
               src="/logo.png"
               alt="VN Phone"
-              width={34}
-              height={34}
-              className="rounded-full ring-2 ring-brand-yellow/30"
+              width={36}
+              height={36}
+              className="rounded-full ring-2 ring-brand-yellow/40"
             />
             <div className="leading-none">
-              <span className="text-sm font-extrabold text-white">
+              <span className="text-[15px] font-extrabold text-white">
                 VN Phone
               </span>
-              <p className="mt-0.5 text-[9px] font-medium text-brand-yellow/70">
-                ผ่อนง่าย บัตรใบเดียว
+              <p className="mt-0.5 text-[10px] font-medium text-brand-yellow/70">
+                เช็คราคาไว ผ่อนง่าย
               </p>
             </div>
           </div>
@@ -32,57 +34,73 @@ export default function Home() {
       </header>
 
       {/* Hero */}
-      <section className="relative bg-brand-navy pb-12 pt-8">
-        {/* Decorative gradient */}
-        <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-brand-yellow/5 blur-3xl" />
-          <div className="absolute -bottom-16 -left-16 h-48 w-48 rounded-full bg-brand-yellow/5 blur-3xl" />
-        </div>
+      <section className="relative pb-20 pt-8">
+        <div className="mx-auto max-w-xl px-4">
+          <div className="animate-fade-in-up rounded-[30px] border border-white/40 bg-gradient-to-br from-brand-navy via-brand-navy-light to-brand-navy p-6 text-center shadow-[0_20px_60px_rgba(30,42,94,0.35)]">
+            <span className="inline-flex items-center gap-1 rounded-full bg-brand-yellow/20 px-3 py-1 text-[11px] font-semibold text-brand-yellow">
+              <span className="h-1.5 w-1.5 rounded-full bg-brand-yellow" />
+              เปิดรับลูกค้าทุกวัน
+            </span>
 
-        <div className="relative mx-auto max-w-xl px-4 text-center">
-          <h1 className="text-[26px] font-black leading-tight text-white sm:text-3xl">
-            ผ่อนมือถือง่ายๆ
-            <br />
-            <span className="text-brand-yellow">บัตรประชาชนใบเดียว</span>
-          </h1>
-          <div className="mx-auto mt-4 flex max-w-xs items-center justify-between rounded-full bg-white/8 px-5 py-2">
-            <Usp label="ศูนย์แท้ 100%" />
-            <div className="h-3 w-px bg-white/20" />
-            <Usp label="ประกัน 1 ปี" />
-            <div className="h-3 w-px bg-white/20" />
-            <Usp label="รับเครื่องทันที" />
+            <h1 className="mt-4 text-[30px] font-black leading-[1.15] text-white sm:text-[34px]">
+              ผ่อนมือถือได้ทันที
+              <br />
+              <span className="text-brand-yellow">ใช้แค่บัตรประชาชนใบเดียว</span>
+            </h1>
+
+            <p className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-white/70">
+              เลือกรุ่นที่ต้องการ แล้วเช็คราคาได้เลยทันที เห็นยอดชัดเจนก่อนตัดสินใจ
+            </p>
+
+            <div className="mt-5 flex flex-wrap justify-center gap-2.5">
+              <Usp label="ศูนย์แท้ 100%" />
+              <Usp label="ประกัน 1 ปี" />
+              <Usp label="รับเครื่องทันที" />
+            </div>
+
+            <div className="mt-6 grid grid-cols-3 gap-2.5">
+              <StatPill value="2 สาขา" label="รังสิต / นวนคร" delayMs={0} />
+              <StatPill value="ศูนย์แท้" label="เครื่องแท้ 100%" delayMs={220} />
+              <StatPill value="ผ่อนง่าย" label="บัตร ปชช. ใบเดียว" delayMs={440} />
+            </div>
           </div>
         </div>
       </section>
 
       {/* Price Checker — Main Section */}
-      <main className="relative mx-auto -mt-6 max-w-xl px-4 pb-8">
+      <main className="relative mx-auto -mt-12 max-w-xl px-4 pb-10">
+        <p className="mb-3 text-center text-[11px] font-semibold uppercase tracking-[0.18em] text-brand-navy/45">
+          เลือกรุ่นเพื่อเช็คราคา
+        </p>
         <PhonePicker />
       </main>
 
       {/* Contact & Branches */}
-      <section className="border-t border-gray-200/60 bg-white">
+      <section className="border-t border-brand-navy/10 bg-white/75 backdrop-blur-sm">
         <div className="mx-auto max-w-xl px-4 py-8">
           {/* Call CTA */}
           <a
             href="tel:099-439-5550"
-            className="flex items-center gap-4 rounded-2xl bg-brand-navy p-4 transition-transform active:scale-[0.98]"
+            className="group flex items-center gap-4 rounded-3xl border border-brand-navy/10 bg-brand-navy p-5 shadow-[0_16px_40px_rgba(20,29,69,0.25)] transition-transform active:scale-[0.98]"
           >
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-yellow">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-yellow transition-transform group-hover:scale-105">
               <PhoneIcon className="h-5 w-5 text-brand-navy" />
             </div>
             <div>
+              <p className="text-[10px] font-semibold uppercase tracking-[0.15em] text-brand-yellow/80">
+                สายด่วน VN Phone
+              </p>
               <div className="text-[22px] font-black tracking-wide text-white">
                 099-439-5550
               </div>
-              <div className="text-[11px] text-gray-400">
+              <div className="text-[11px] text-gray-300">
                 โทรสอบถาม / นัดรับเครื่อง
               </div>
             </div>
           </a>
 
           {/* Branches */}
-          <div className="mt-4 grid grid-cols-2 gap-3">
+          <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
             <BranchCard name="รังสิต คลองสาม" detail="พหลโยธิน 65/1" />
             <BranchCard name="นวนคร" detail="ตลาดไท" />
           </div>
@@ -90,10 +108,9 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="bg-brand-navy-dark py-4 text-center">
-        <p className="text-[10px] text-gray-500">
-          &copy; {new Date().getFullYear()} VN Phone &mdash; ผ่อนมือถือ
-          บัตรประชาชนใบเดียว
+      <footer className="border-t border-brand-navy/10 bg-brand-navy-dark py-5 text-center">
+        <p className="text-[10px] text-gray-400">
+          &copy; {new Date().getFullYear()} VN Phone | ผ่อนมือถือ บัตรประชาชนใบเดียว
         </p>
       </footer>
 
@@ -101,7 +118,7 @@ export default function Home() {
       <a
         href="tel:099-439-5550"
         aria-label="โทรหาร้าน"
-        className="fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-yellow shadow-lg animate-pulse-glow transition-transform active:scale-90 lg:hidden"
+        className="animate-pulse-glow fixed bottom-5 right-5 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-brand-yellow shadow-[0_12px_28px_rgba(255,193,7,0.45)] transition-transform active:scale-90 lg:hidden"
       >
         <PhoneIcon className="h-6 w-6 text-brand-navy" />
       </a>
@@ -113,16 +130,38 @@ export default function Home() {
 
 function Usp({ label }: { label: string }) {
   return (
-    <span className="text-[11px] font-semibold text-white/80">{label}</span>
+    <span className="rounded-full border border-white/15 bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/85">
+      {label}
+    </span>
+  );
+}
+
+function StatPill({
+  value,
+  label,
+  delayMs = 0,
+}: {
+  value: string;
+  label: string;
+  delayMs?: number;
+}) {
+  return (
+    <div
+      className="animate-float-soft rounded-2xl border border-white/10 bg-white/10 px-2.5 py-3"
+      style={{ animationDelay: `${delayMs}ms` }}
+    >
+      <div className="text-sm font-black text-brand-yellow">{value}</div>
+      <div className="mt-0.5 text-[10px] font-medium text-white/65">{label}</div>
+    </div>
   );
 }
 
 function BranchCard({ name, detail }: { name: string; detail: string }) {
   return (
-    <div className="rounded-xl bg-[#f8f8fa] p-3.5">
+    <div className="rounded-2xl border border-brand-navy/10 bg-white p-4 shadow-sm">
       <div className="flex items-center gap-1.5">
         <svg
-          className="h-3.5 w-3.5 text-brand-yellow"
+          className="h-4 w-4 text-brand-yellow"
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -132,9 +171,20 @@ function BranchCard({ name, detail }: { name: string; detail: string }) {
             clipRule="evenodd"
           />
         </svg>
-        <span className="text-xs font-bold text-brand-navy">{name}</span>
+        <span className="text-sm font-bold text-brand-navy">{name}</span>
       </div>
-      <p className="mt-0.5 pl-5 text-[10px] text-gray-400">{detail}</p>
+      <p className="mt-1 pl-5 text-xs text-gray-500">{detail}</p>
+    </div>
+  );
+}
+
+function BackgroundAura() {
+  return (
+    <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+      <div className="absolute -top-44 left-1/2 h-[560px] w-[560px] -translate-x-1/2 rounded-full bg-brand-yellow/25 blur-3xl" />
+      <div className="absolute -right-32 top-32 h-72 w-72 rounded-full bg-brand-navy/12 blur-3xl" />
+      <div className="absolute -left-28 bottom-20 h-60 w-60 rounded-full bg-brand-yellow/12 blur-3xl" />
+      <div className="absolute inset-0 bg-[linear-gradient(to_bottom,rgba(255,255,255,0)_0%,rgba(255,255,255,0.55)_100%)]" />
     </div>
   );
 }
