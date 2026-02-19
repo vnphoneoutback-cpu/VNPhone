@@ -43,24 +43,22 @@ export default function AuthButton() {
   };
 
   if (loading) {
-    return (
-      <div className="h-8 w-20 animate-pulse rounded-lg bg-gray-100" />
-    );
+    return <div className="h-7 w-16 animate-pulse rounded-lg bg-white/10" />;
   }
 
   if (user) {
     return (
       <div className="flex items-center gap-2">
-        <div className="flex h-7 w-7 items-center justify-center rounded-full bg-brand-navy text-[10px] font-bold text-white">
+        <div className="flex h-6 w-6 items-center justify-center rounded-full bg-brand-yellow text-[10px] font-bold text-brand-navy">
           {(user.user_metadata?.full_name || user.email || "U")
             .charAt(0)
             .toUpperCase()}
         </div>
         <button
           onClick={handleLogout}
-          className="rounded-lg px-2.5 py-1.5 text-[11px] font-medium text-gray-400 transition hover:bg-gray-100 hover:text-gray-600"
+          className="rounded-md px-2 py-1 text-[10px] font-medium text-white/50 transition hover:text-white/80"
         >
-          ออกจากระบบ
+          ออก
         </button>
       </div>
     );
@@ -69,9 +67,9 @@ export default function AuthButton() {
   return (
     <button
       onClick={handleLogin}
-      className="flex items-center gap-1.5 rounded-lg bg-brand-gray px-3 py-2 text-[11px] font-semibold text-gray-600 transition hover:bg-gray-200"
+      className="flex items-center gap-1.5 rounded-lg bg-white/10 px-3 py-1.5 text-[11px] font-semibold text-white/70 transition hover:bg-white/15 hover:text-white"
     >
-      <svg className="h-3.5 w-3.5" viewBox="0 0 24 24">
+      <svg className="h-3 w-3" viewBox="0 0 24 24">
         <path
           d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"
           fill="#4285F4"
