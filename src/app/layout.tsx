@@ -14,25 +14,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "VN Phone - ผ่อนมือถือ บัตรประชาชนใบเดียว",
-  description:
-    "ผ่อนมือถือ iPhone, iPad ง่ายๆ แค่บัตรประชาชนใบเดียว เครื่องศูนย์แท้ รับประกัน 1 ปี จ่ายดาวน์รับเครื่องเลย สาขารังสิต คลองสาม นวนคร",
-  keywords: [
-    "ผ่อนมือถือ",
-    "บัตรประชาชนใบเดียว",
-    "iPhone ผ่อน",
-    "iPad ผ่อน",
-    "VN Phone",
-    "วีเอ็นโฟน",
-    "ผ่อน iPhone รังสิต",
-    "ผ่อนมือถือ นวนคร",
-  ],
-  openGraph: {
-    title: "VN Phone - ผ่อนมือถือ บัตรประชาชนใบเดียว",
-    description:
-      "เครื่องศูนย์แท้ รับประกัน 1 ปี จ่ายดาวน์รับเครื่องเลย",
-    type: "website",
-  },
+  title: "VN Phone - Staff Tool",
+  description: "ระบบภายในสำหรับพนักงาน VN Phone - เช็คราคา คำนวณผ่อน จัดการสินค้า",
+  robots: "noindex, nofollow",
 };
 
 export default function RootLayout({
