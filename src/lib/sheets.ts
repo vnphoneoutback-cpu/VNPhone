@@ -111,7 +111,12 @@ export async function fetchInstallmentProducts(): Promise<InstallmentProduct[]> 
     const month8 = parseNumber(row[5] || "");
     const month10 = parseNumber(row[6] || "");
     const month12 = parseNumber(row[7] || "");
-    const note = row[8]?.trim() || "";
+
+    // If 10+ columns: col 8 = interest rate %, col 9 = note
+    // If 9 columns (old format): no interest rate, col 8 = note
+    const hasInterestCol = row.length >= 10;
+    const interestRate = hasInterestCol ? (row[8]?.trim() || null) : null;
+    const note = hasInterestCol ? (row[9]?.trim() || "") : (row[8]?.trim() || "");
 
     if (brand && model) {
       products.push({
@@ -123,6 +128,7 @@ export async function fetchInstallmentProducts(): Promise<InstallmentProduct[]> 
         month8,
         month10,
         month12,
+        interestRate,
         note,
       });
     }

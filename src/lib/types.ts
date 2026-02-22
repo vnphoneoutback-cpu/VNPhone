@@ -68,6 +68,7 @@ export interface InstallmentProduct {
   month8: number | null;
   month10: number | null;
   month12: number | null;
+  interestRate: string | null;
   note: string;
 }
 

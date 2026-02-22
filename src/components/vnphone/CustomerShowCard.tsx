@@ -30,7 +30,13 @@ export default function CustomerShowCard({
       >
         {/* Model name */}
         <h2 className="text-3xl font-bold text-white mb-1">{product.model}</h2>
-        <p className="text-white/50 text-lg mb-8">{product.storage}</p>
+        <p className="text-white/50 text-lg mb-2">{product.storage}</p>
+        {product.interestRate && (
+          <span className="inline-block rounded-full bg-brand-yellow px-3 py-1 text-sm font-bold text-brand-navy mb-6">
+            ดอกเบี้ย {product.interestRate}
+          </span>
+        )}
+        {!product.interestRate && <div className="mb-6" />}
 
         {/* Down payment */}
         {product.downPayment !== null && (

@@ -23,11 +23,20 @@ export default function InstallmentTable({
     <div className="glass-card animate-fade-in-up overflow-hidden rounded-2xl">
       {/* Header */}
       <div className="bg-gradient-to-r from-brand-navy to-brand-navy-light px-4 py-3">
-        <h3 className="font-bold text-white text-lg">{product.model}</h3>
-        <p className="text-white/60 text-sm">
-          {product.storage}
-          {product.note && ` · ${product.note}`}
-        </p>
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <h3 className="font-bold text-white text-lg">{product.model}</h3>
+            <p className="text-white/60 text-sm">
+              {product.storage}
+              {product.note && ` · ${product.note}`}
+            </p>
+          </div>
+          {product.interestRate && (
+            <span className="shrink-0 rounded-full bg-brand-yellow px-2.5 py-1 text-xs font-bold text-brand-navy">
+              {product.interestRate}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Down payment */}
