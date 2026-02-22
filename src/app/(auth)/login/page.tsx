@@ -41,9 +41,9 @@ export default function LoginPage() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl p-6 shadow-xl animate-fade-in-up"
+      className="glass-card animate-fade-in-up rounded-3xl p-6"
     >
-      <h2 className="text-xl font-bold text-brand-navy mb-6 text-center">
+      <h2 className="mb-6 text-center text-2xl font-extrabold text-brand-navy">
         เข้าสู่ระบบ
       </h2>
 
@@ -56,7 +56,7 @@ export default function LoginPage() {
       <div className="mb-4">
         <label
           htmlFor="identifier"
-          className="block text-sm font-medium text-gray-700 mb-1"
+          className="mb-1 block text-sm font-medium text-brand-navy/80"
         >
           อีเมล หรือ เบอร์โทร
         </label>
@@ -66,7 +66,7 @@ export default function LoginPage() {
           value={identifier}
           onChange={(e) => setIdentifier(e.target.value)}
           placeholder="email@example.com หรือ 0812345678"
-          className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none transition text-brand-navy"
+          className="lux-input w-full rounded-xl px-4 py-3 text-brand-navy outline-none transition"
           required
           autoFocus
         />
@@ -75,7 +75,7 @@ export default function LoginPage() {
       <button
         type="submit"
         disabled={loading || !identifier.trim()}
-        className="w-full bg-brand-yellow text-brand-navy font-bold py-3 rounded-xl hover:bg-brand-yellow-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="lux-btn-primary w-full rounded-xl py-3 font-bold text-brand-navy transition disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? "กำลังเข้าสู่ระบบ..." : "เข้าสู่ระบบ"}
       </button>
@@ -84,7 +84,7 @@ export default function LoginPage() {
         ยังไม่มีบัญชี?{" "}
         <Link
           href="/register"
-          className="text-brand-navy font-medium hover:underline"
+          className="font-semibold text-brand-navy hover:underline"
         >
           สมัครใช้งาน
         </Link>

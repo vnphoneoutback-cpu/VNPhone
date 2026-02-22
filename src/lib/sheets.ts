@@ -5,6 +5,12 @@ import type { CashProduct, InstallmentProduct } from "./types";
 const SHEET_ID = process.env.GOOGLE_SHEET_ID || "";
 const BASE_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:csv`;
 
+function ensureSheetConfigured() {
+  if (!SHEET_ID) {
+    throw new Error("Missing GOOGLE_SHEET_ID");
+  }
+}
+
 function parseCSVLine(line: string): string[] {
   const result: string[] = [];
   let current = "";
@@ -47,6 +53,7 @@ function parseNumber(val: string): number | null {
 // ============================================
 
 export async function fetchCashProducts(): Promise<CashProduct[]> {
+  ensureSheetConfigured();
   const url = `${BASE_URL}&sheet=${encodeURIComponent("ซื้อ สด")}`;
 
   const res = await fetch(url, { next: { revalidate: 300 } });
@@ -81,6 +88,7 @@ export async function fetchCashProducts(): Promise<CashProduct[]> {
 // ============================================
 
 export async function fetchInstallmentProducts(): Promise<InstallmentProduct[]> {
+  ensureSheetConfigured();
   const url = `${BASE_URL}&sheet=${encodeURIComponent("ผ่อน")}`;
 
   const res = await fetch(url, { next: { revalidate: 300 } });

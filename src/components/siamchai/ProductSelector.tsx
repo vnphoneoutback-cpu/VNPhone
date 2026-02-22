@@ -64,7 +64,7 @@ export default function ProductSelector({
             onModelChange("");
             onStorageChange("");
           }}
-          className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none text-brand-navy"
+          className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none"
         >
           <option value="">-- เลือกยี่ห้อ --</option>
           {brands.map((b) => (
@@ -87,7 +87,7 @@ export default function ProductSelector({
               onModelChange(e.target.value);
               onStorageChange("");
             }}
-            className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none text-brand-navy"
+            className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none"
           >
             <option value="">-- เลือกรุ่น --</option>
             {models.map((m) => (
@@ -108,7 +108,7 @@ export default function ProductSelector({
           <select
             value={selectedStorage}
             onChange={(e) => onStorageChange(e.target.value)}
-            className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none text-brand-navy"
+            className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none"
           >
             <option value="">-- เลือกความจุ --</option>
             {storages.map((s) => (

@@ -90,10 +90,19 @@ export interface CartItem {
 // Activity Log
 // ============================================
 
+export type ActivityAction =
+  | "login"
+  | "view_dashboard"
+  | "view_product"
+  | "add_to_cart"
+  | "open_quote"
+  | "export_quote"
+  | "admin_update_staff";
+
 export interface ActivityLog {
   id: string;
   staff_id: string | null;
-  action: "login" | "view_product" | "add_to_cart" | "export_quote";
+  action: ActivityAction;
   details: Record<string, unknown>;
   created_at: string;
   staff?: StaffPublic;

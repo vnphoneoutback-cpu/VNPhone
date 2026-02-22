@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useMemo } from "react";
 import type { InstallmentProduct } from "@/lib/types";
+import { logActivity } from "@/lib/activity-client";
 import BrandTabs from "./BrandTabs";
 import InstallmentTable from "./InstallmentTable";
 import CustomerShowCard from "./CustomerShowCard";
@@ -15,6 +16,10 @@ export default function VnphoneDashboard() {
     null
   );
   const [search, setSearch] = useState("");
+
+  useEffect(() => {
+    void logActivity("view_dashboard", { dashboard: "vnphone_installment" });
+  }, []);
 
   useEffect(() => {
     fetch("/api/sheets/installment")
@@ -32,6 +37,16 @@ export default function VnphoneDashboard() {
       .catch(() => setError("ไม่สามารถเชื่อมต่อได้"))
       .finally(() => setLoading(false));
   }, []);
+
+  function handleShowCustomer(product: InstallmentProduct) {
+    setShowProduct(product);
+    void logActivity("view_product", {
+      dashboard: "vnphone_installment",
+      brand: product.brand,
+      model: product.model,
+      storage: product.storage,
+    });
+  }
 
   const brands = useMemo(
     () => [...new Set(products.map((p) => p.brand))],
@@ -69,7 +84,7 @@ export default function VnphoneDashboard() {
   if (error) {
     return (
       <div className="p-4">
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-center">
+        <div className="glass-card rounded-xl border border-red-200 bg-red-50/80 p-4 text-center text-red-700">
           {error}
         </div>
       </div>
@@ -77,28 +92,37 @@ export default function VnphoneDashboard() {
   }
 
   return (
-    <div className="pb-8">
+    <div className="mx-auto max-w-5xl space-y-3 pb-8">
+      <section className="glass-card mx-2 rounded-2xl p-4 sm:mx-0">
+        <h2 className="text-lg font-extrabold text-brand-navy">VN Installment Calculator</h2>
+        <p className="mt-1 text-sm text-brand-navy/65">
+          ค้นหารุ่นสินค้าและแสดงยอดดาวน์/ยอดผ่อนเพื่อคุยกับลูกค้าได้ทันที
+        </p>
+      </section>
+
       {/* Brand tabs */}
-      <div className="sticky top-[52px] z-40 bg-background/95 backdrop-blur-sm py-3 px-4">
-        <BrandTabs
-          brands={brands}
-          selected={selectedBrand}
-          onSelect={setSelectedBrand}
-        />
-        {/* Search */}
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="ค้นหารุ่น..."
-          className="mt-2 w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-sm focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none text-brand-navy"
-        />
+      <div className="sticky top-[76px] z-40 px-2 pt-1 sm:px-0">
+        <div className="glass-panel rounded-2xl px-3 py-3">
+          <BrandTabs
+            brands={brands}
+            selected={selectedBrand}
+            onSelect={setSelectedBrand}
+          />
+          {/* Search */}
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="ค้นหารุ่น..."
+            className="lux-input mt-2 w-full rounded-xl px-3 py-2 text-sm text-brand-navy outline-none"
+          />
+        </div>
       </div>
 
       {/* Product grid */}
-      <div className="px-4 mt-2 space-y-3">
+      <div className="mt-1 space-y-3 px-2 sm:px-0">
         {filteredProducts.length === 0 ? (
-          <div className="text-center text-gray-400 py-12">
+          <div className="glass-card rounded-2xl py-12 text-center text-gray-400">
             <p className="text-lg">ไม่พบสินค้า</p>
           </div>
         ) : (
@@ -106,7 +130,7 @@ export default function VnphoneDashboard() {
             <InstallmentTable
               key={`${product.brand}-${product.model}-${product.storage}-${idx}`}
               product={product}
-              onShowCustomer={() => setShowProduct(product)}
+              onShowCustomer={() => handleShowCustomer(product)}
             />
           ))
         )}

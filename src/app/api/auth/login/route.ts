@@ -6,8 +6,9 @@ import type { AuthPayload } from "@/lib/types";
 export async function POST(request: NextRequest) {
   try {
     const { identifier } = (await request.json()) as { identifier: string };
+    const trimmed = identifier?.trim();
 
-    if (!identifier) {
+    if (!trimmed) {
       return NextResponse.json(
         { error: "กรุณากรอกอีเมลหรือเบอร์โทร" },
         { status: 400 }
@@ -15,13 +16,15 @@ export async function POST(request: NextRequest) {
     }
 
     const supabase = createServerClient();
+    const identifierType = trimmed.includes("@") ? "email" : "phone";
+    const normalizedIdentifier = identifierType === "email" ? trimmed.toLowerCase() : trimmed;
 
     // Find staff by email or phone
     const { data: staff } = await supabase
       .from("staff")
       .select("*")
-      .or(`email.eq.${identifier},phone.eq.${identifier}`)
-      .single();
+      .eq(identifierType, normalizedIdentifier)
+      .maybeSingle();
 
     if (!staff) {
       return NextResponse.json(
@@ -54,7 +57,7 @@ export async function POST(request: NextRequest) {
     await supabase.from("activity_logs").insert({
       staff_id: staff.id,
       action: "login",
-      details: { method: identifier.includes("@") ? "email" : "phone" },
+      details: { method: identifierType },
     });
 
     // Sign JWT

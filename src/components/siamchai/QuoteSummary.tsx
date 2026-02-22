@@ -15,8 +15,8 @@ export default function QuoteSummary({ items, staffName }: QuoteSummaryProps) {
   return (
     <div
       id="quote-summary"
-      className="bg-white rounded-xl p-5 border-2 border-brand-navy"
-      style={{ width: "380px" }}
+      className="rounded-xl border-2 border-brand-navy bg-white p-5 shadow-[0_16px_36px_rgba(12,27,64,0.2)]"
+      style={{ width: "min(380px, 100%)" }}
     >
       {/* Header */}
       <div className="text-center mb-4 pb-3 border-b-2 border-brand-navy">

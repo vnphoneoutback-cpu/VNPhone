@@ -45,5 +45,16 @@ export async function PUT(
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  if (adminId) {
+    await supabase.from("activity_logs").insert({
+      staff_id: adminId,
+      action: "admin_update_staff",
+      details: {
+        target_staff_id: id,
+        updates,
+      },
+    });
+  }
+
   return NextResponse.json({ staff: data });
 }

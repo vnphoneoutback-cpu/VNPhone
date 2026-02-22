@@ -49,7 +49,7 @@ export default function RegisterPage() {
 
   if (success) {
     return (
-      <div className="bg-white rounded-2xl p-6 shadow-xl animate-fade-in-up text-center">
+      <div className="glass-card animate-fade-in-up rounded-3xl p-6 text-center">
         <div className="text-4xl mb-4">✅</div>
         <h2 className="text-xl font-bold text-brand-navy mb-2">
           สมัครสำเร็จ!
@@ -59,7 +59,7 @@ export default function RegisterPage() {
         </p>
         <Link
           href="/login"
-          className="inline-block bg-brand-navy text-white font-medium py-2 px-6 rounded-xl hover:bg-brand-navy-light transition"
+          className="lux-btn-secondary inline-block rounded-xl px-6 py-2 font-semibold text-white transition"
         >
           กลับหน้า Login
         </Link>
@@ -70,9 +70,9 @@ export default function RegisterPage() {
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-2xl p-6 shadow-xl animate-fade-in-up"
+      className="glass-card animate-fade-in-up rounded-3xl p-6"
     >
-      <h2 className="text-xl font-bold text-brand-navy mb-6 text-center">
+      <h2 className="mb-6 text-center text-2xl font-extrabold text-brand-navy">
         สมัครใช้งาน
       </h2>
 
@@ -93,8 +93,8 @@ export default function RegisterPage() {
             onClick={() => updateField("company", "vnphone")}
             className={`py-3 rounded-xl font-medium text-sm border-2 transition ${
               form.company === "vnphone"
-                ? "border-brand-yellow bg-brand-yellow-light text-brand-navy"
-                : "border-gray-200 text-gray-500 hover:border-gray-300"
+                ? "border-brand-yellow/70 bg-brand-yellow-light text-brand-navy shadow-[0_8px_22px_rgba(246,197,83,0.22)]"
+                : "border-gray-200 bg-white/70 text-gray-500 hover:border-gray-300"
             }`}
           >
             VN Phone
@@ -104,8 +104,8 @@ export default function RegisterPage() {
             onClick={() => updateField("company", "siamchai")}
             className={`py-3 rounded-xl font-medium text-sm border-2 transition ${
               form.company === "siamchai"
-                ? "border-brand-yellow bg-brand-yellow-light text-brand-navy"
-                : "border-gray-200 text-gray-500 hover:border-gray-300"
+                ? "border-brand-yellow/70 bg-brand-yellow-light text-brand-navy shadow-[0_8px_22px_rgba(246,197,83,0.22)]"
+                : "border-gray-200 bg-white/70 text-gray-500 hover:border-gray-300"
             }`}
           >
             สยามชัย
@@ -122,7 +122,7 @@ export default function RegisterPage() {
             type="text"
             value={form.first_name}
             onChange={(e) => updateField("first_name", e.target.value)}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none transition text-brand-navy"
+            className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none transition"
             required
           />
         </div>
@@ -134,7 +134,7 @@ export default function RegisterPage() {
             type="text"
             value={form.last_name}
             onChange={(e) => updateField("last_name", e.target.value)}
-            className="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none transition text-brand-navy"
+            className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none transition"
             required
           />
         </div>
@@ -148,7 +148,7 @@ export default function RegisterPage() {
           type="text"
           value={form.nickname}
           onChange={(e) => updateField("nickname", e.target.value)}
-          className="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none transition text-brand-navy"
+          className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none transition"
           required
         />
       </div>
@@ -162,7 +162,7 @@ export default function RegisterPage() {
           value={form.email}
           onChange={(e) => updateField("email", e.target.value)}
           placeholder="email@example.com"
-          className="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none transition text-brand-navy"
+          className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none transition"
           required
         />
       </div>
@@ -176,7 +176,7 @@ export default function RegisterPage() {
           value={form.phone}
           onChange={(e) => updateField("phone", e.target.value)}
           placeholder="0812345678"
-          className="w-full px-3 py-2.5 border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none transition text-brand-navy"
+          className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none transition"
           required
         />
       </div>
@@ -184,7 +184,7 @@ export default function RegisterPage() {
       <button
         type="submit"
         disabled={loading}
-        className="w-full bg-brand-yellow text-brand-navy font-bold py-3 rounded-xl hover:bg-brand-yellow-dark transition disabled:opacity-50 disabled:cursor-not-allowed"
+        className="lux-btn-primary w-full rounded-xl py-3 font-bold text-brand-navy transition disabled:cursor-not-allowed disabled:opacity-50"
       >
         {loading ? "กำลังสมัคร..." : "สมัครใช้งาน"}
       </button>
@@ -193,7 +193,7 @@ export default function RegisterPage() {
         มีบัญชีแล้ว?{" "}
         <Link
           href="/login"
-          className="text-brand-navy font-medium hover:underline"
+          className="font-semibold text-brand-navy hover:underline"
         >
           เข้าสู่ระบบ
         </Link>

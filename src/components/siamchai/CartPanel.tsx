@@ -18,7 +18,7 @@ export default function CartPanel({
 
   if (items.length === 0) {
     return (
-      <div className="bg-white rounded-xl border border-gray-200 p-6 text-center text-gray-400">
+      <div className="glass-card rounded-xl p-6 text-center text-gray-400">
         <div className="text-3xl mb-2">🛒</div>
         <p className="text-sm">ยังไม่มีสินค้าในรายการ</p>
       </div>
@@ -26,8 +26,8 @@ export default function CartPanel({
   }
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-      <div className="px-4 py-3 bg-brand-navy text-white font-medium text-sm flex items-center justify-between">
+    <div className="glass-card overflow-hidden rounded-xl">
+      <div className="flex items-center justify-between bg-brand-navy px-4 py-3 text-sm font-medium text-white">
         <span>รายการสินค้า ({items.length})</span>
         <span className="text-brand-yellow font-bold">
           ฿{formatPrice(total)}
@@ -52,7 +52,7 @@ export default function CartPanel({
                 onClick={() =>
                   onUpdateQuantity(item.id, Math.max(1, item.quantity - 1))
                 }
-                className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-600 transition"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-brand-navy/10 bg-white/80 text-sm font-bold text-gray-600 transition hover:bg-white"
               >
                 -
               </button>
@@ -61,7 +61,7 @@ export default function CartPanel({
               </span>
               <button
                 onClick={() => onUpdateQuantity(item.id, item.quantity + 1)}
-                className="w-7 h-7 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-sm font-bold text-gray-600 transition"
+                className="flex h-7 w-7 items-center justify-center rounded-lg border border-brand-navy/10 bg-white/80 text-sm font-bold text-gray-600 transition hover:bg-white"
               >
                 +
               </button>

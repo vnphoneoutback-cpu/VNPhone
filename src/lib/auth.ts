@@ -4,9 +4,13 @@ import { createServerClient } from "./supabase-server";
 import type { AuthPayload, Staff } from "./types";
 
 const COOKIE_NAME = "vnphone-token";
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "fallback-secret-change-me"
-);
+const jwtSecret = process.env.JWT_SECRET;
+
+if (!jwtSecret) {
+  throw new Error("Missing JWT_SECRET env var");
+}
+
+const JWT_SECRET = new TextEncoder().encode(jwtSecret);
 
 // ============================================
 // JWT

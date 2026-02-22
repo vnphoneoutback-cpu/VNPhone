@@ -4,9 +4,13 @@ import { useState } from "react";
 
 interface SaveImageButtonProps {
   disabled: boolean;
+  onSaved?: (channel: "share" | "download") => void;
 }
 
-export default function SaveImageButton({ disabled }: SaveImageButtonProps) {
+export default function SaveImageButton({
+  disabled,
+  onSaved,
+}: SaveImageButtonProps) {
   const [saving, setSaving] = useState(false);
 
   async function handleSave() {
@@ -22,9 +26,10 @@ export default function SaveImageButton({ disabled }: SaveImageButtonProps) {
         useCORS: true,
       });
 
-      const blob = await new Promise<Blob>((resolve) =>
-        canvas.toBlob((b) => resolve(b!), "image/png")
+      const blob = await new Promise<Blob | null>((resolve) =>
+        canvas.toBlob(resolve, "image/png")
       );
+      if (!blob) throw new Error("Cannot create image blob");
 
       // Try Web Share API first (mobile → LINE)
       if (navigator.share && navigator.canShare) {
@@ -33,6 +38,7 @@ export default function SaveImageButton({ disabled }: SaveImageButtonProps) {
 
         if (navigator.canShare(shareData)) {
           await navigator.share(shareData);
+          onSaved?.("share");
           return;
         }
       }
@@ -44,6 +50,7 @@ export default function SaveImageButton({ disabled }: SaveImageButtonProps) {
       a.download = `quote-${Date.now()}.png`;
       a.click();
       URL.revokeObjectURL(url);
+      onSaved?.("download");
     } catch (err) {
       console.error("Save failed:", err);
     } finally {
@@ -55,7 +62,7 @@ export default function SaveImageButton({ disabled }: SaveImageButtonProps) {
     <button
       onClick={handleSave}
       disabled={disabled || saving}
-      className="w-full bg-green-600 text-white font-bold py-3 rounded-xl hover:bg-green-700 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+      className="w-full rounded-xl bg-gradient-to-r from-emerald-600 to-emerald-500 py-3 font-bold text-white shadow-[0_10px_24px_rgba(22,163,74,0.34)] transition hover:brightness-95 disabled:cursor-not-allowed disabled:opacity-50 flex items-center justify-center gap-2"
     >
       {saving ? (
         "กำลังสร้างภาพ..."

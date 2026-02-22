@@ -14,9 +14,11 @@ export default async function ProtectedLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <AppHeader staff={staff} />
-      <main>{children}</main>
+    <div className="page-aurora min-h-screen">
+      <div className="mx-auto min-h-screen w-full max-w-6xl">
+        <AppHeader staff={staff} />
+        <main className="px-2 pb-8 pt-4 sm:px-4">{children}</main>
+      </div>
     </div>
   );
 }

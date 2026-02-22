@@ -10,22 +10,36 @@ const STATUS_LABELS: Record<string, { label: string; color: string }> = {
   inactive: { label: "ปิดใช้งาน", color: "bg-gray-100 text-gray-600" },
 };
 
+const ROLE_LABELS: Record<string, { label: string; color: string }> = {
+  admin: { label: "Admin", color: "bg-violet-100 text-violet-700" },
+  staff: { label: "Member", color: "bg-slate-100 text-slate-700" },
+};
+
 export default function StaffManagementPage() {
   const [staffList, setStaffList] = useState<Staff[]>([]);
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState<string | null>(null);
+  const [error, setError] = useState("");
 
-  const fetchStaff = useCallback(() => {
-    fetch("/api/staff")
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.staff) setStaffList(data.staff);
-      })
-      .finally(() => setLoading(false));
+  const fetchStaff = useCallback(async () => {
+    setError("");
+    try {
+      const res = await fetch("/api/staff");
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.error || "โหลดรายชื่อสมาชิกไม่สำเร็จ");
+      }
+      setStaffList(data.staff || []);
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาด";
+      setError(message);
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
   useEffect(() => {
-    fetchStaff();
+    void fetchStaff();
   }, [fetchStaff]);
 
   async function updateStaff(
@@ -33,15 +47,21 @@ export default function StaffManagementPage() {
     updates: { status?: string; role?: string }
   ) {
     setUpdating(id);
+    setError("");
     try {
       const res = await fetch(`/api/staff/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(updates),
       });
-      if (res.ok) {
-        fetchStaff();
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        throw new Error(data.error || "อัปเดตสมาชิกไม่สำเร็จ");
       }
+      await fetchStaff();
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "เกิดข้อผิดพลาด";
+      setError(message);
     } finally {
       setUpdating(null);
     }
@@ -67,24 +87,31 @@ export default function StaffManagementPage() {
   });
 
   return (
-    <div className="p-4 max-w-lg mx-auto space-y-3 pb-8">
+    <div className="mx-auto max-w-4xl space-y-3 pb-8">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-brand-navy">จัดการพนักงาน</h2>
+        <h2 className="text-xl font-extrabold text-brand-navy">จัดการสมาชิก</h2>
         <Link
           href="/admin"
-          className="text-sm text-brand-navy hover:underline"
+          className="rounded-lg border border-brand-navy/20 bg-white/70 px-3 py-1.5 text-sm font-semibold text-brand-navy transition hover:bg-white"
         >
           กลับ
         </Link>
       </div>
 
+      {error && (
+        <div className="glass-card rounded-xl border border-red-200 bg-red-50/80 p-3 text-sm text-red-700">
+          {error}
+        </div>
+      )}
+
       {sortedStaff.length === 0 ? (
-        <div className="text-center text-gray-400 py-12">
+        <div className="glass-card rounded-2xl py-12 text-center text-gray-400">
           ยังไม่มีพนักงาน
         </div>
       ) : (
         sortedStaff.map((s) => {
           const statusInfo = STATUS_LABELS[s.status] || STATUS_LABELS.pending;
+          const roleInfo = ROLE_LABELS[s.role] || ROLE_LABELS.staff;
           const isUpdating = updating === s.id;
           const companyLabel =
             s.company === "vnphone" ? "VN Phone" : "สยามชัย";
@@ -92,10 +119,10 @@ export default function StaffManagementPage() {
           return (
             <div
               key={s.id}
-              className={`bg-white rounded-xl border p-4 transition ${
+              className={`glass-card rounded-2xl border p-4 transition ${
                 s.status === "pending"
-                  ? "border-yellow-300 bg-yellow-50/50"
-                  : "border-gray-200"
+                  ? "border-yellow-300 bg-yellow-50/40"
+                  : "border-white/60"
               } ${isUpdating ? "opacity-50" : ""}`}
             >
               <div className="flex items-start justify-between mb-2">
@@ -110,11 +137,16 @@ export default function StaffManagementPage() {
                     {s.email} · {s.phone}
                   </p>
                 </div>
-                <div className="flex gap-1.5">
+                <div className="flex flex-wrap justify-end gap-1.5">
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full font-medium ${statusInfo.color}`}
                   >
                     {statusInfo.label}
+                  </span>
+                  <span
+                    className={`text-xs px-2 py-0.5 rounded-full font-medium ${roleInfo.color}`}
+                  >
+                    {roleInfo.label}
                   </span>
                   <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-blue-100 text-blue-800">
                     {companyLabel}
@@ -123,12 +155,12 @@ export default function StaffManagementPage() {
               </div>
 
               {/* Actions */}
-              <div className="flex gap-2 mt-3">
+              <div className="mt-3 flex flex-wrap gap-2">
                 {s.status === "pending" && (
                   <button
                     onClick={() => updateStaff(s.id, { status: "active" })}
                     disabled={isUpdating}
-                    className="text-xs bg-green-500 text-white px-3 py-1.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50"
+                    className="rounded-lg bg-green-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-600 disabled:opacity-50"
                   >
                     อนุมัติ
                   </button>
@@ -137,7 +169,7 @@ export default function StaffManagementPage() {
                   <button
                     onClick={() => updateStaff(s.id, { status: "inactive" })}
                     disabled={isUpdating}
-                    className="text-xs bg-gray-500 text-white px-3 py-1.5 rounded-lg hover:bg-gray-600 transition disabled:opacity-50"
+                    className="rounded-lg bg-gray-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-gray-600 disabled:opacity-50"
                   >
                     ปิดใช้งาน
                   </button>
@@ -146,7 +178,7 @@ export default function StaffManagementPage() {
                   <button
                     onClick={() => updateStaff(s.id, { status: "active" })}
                     disabled={isUpdating}
-                    className="text-xs bg-green-500 text-white px-3 py-1.5 rounded-lg hover:bg-green-600 transition disabled:opacity-50"
+                    className="rounded-lg bg-green-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-green-600 disabled:opacity-50"
                   >
                     เปิดใช้งาน
                   </button>
@@ -155,7 +187,7 @@ export default function StaffManagementPage() {
                   <button
                     onClick={() => updateStaff(s.id, { role: "admin" })}
                     disabled={isUpdating}
-                    className="text-xs bg-brand-navy text-white px-3 py-1.5 rounded-lg hover:bg-brand-navy-light transition disabled:opacity-50"
+                    className="rounded-lg bg-brand-navy px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-brand-navy-light disabled:opacity-50"
                   >
                     เลื่อนเป็น Admin
                   </button>
@@ -164,7 +196,7 @@ export default function StaffManagementPage() {
                   <button
                     onClick={() => updateStaff(s.id, { role: "staff" })}
                     disabled={isUpdating}
-                    className="text-xs bg-orange-500 text-white px-3 py-1.5 rounded-lg hover:bg-orange-600 transition disabled:opacity-50"
+                    className="rounded-lg bg-orange-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-orange-600 disabled:opacity-50"
                   >
                     ลดเป็น Staff
                   </button>

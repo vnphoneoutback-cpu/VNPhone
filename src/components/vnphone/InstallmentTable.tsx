@@ -20,9 +20,9 @@ export default function InstallmentTable({
   ];
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 overflow-hidden animate-fade-in-up">
+    <div className="glass-card animate-fade-in-up overflow-hidden rounded-2xl">
       {/* Header */}
-      <div className="bg-brand-navy px-4 py-3">
+      <div className="bg-gradient-to-r from-brand-navy to-brand-navy-light px-4 py-3">
         <h3 className="font-bold text-white text-lg">{product.model}</h3>
         <p className="text-white/60 text-sm">
           {product.storage}
@@ -32,8 +32,8 @@ export default function InstallmentTable({
 
       {/* Down payment */}
       {product.downPayment !== null && (
-        <div className="px-4 py-3 bg-brand-yellow-light border-b border-gray-200">
-          <p className="text-sm text-gray-600">ดาวน์</p>
+        <div className="border-b border-brand-yellow/40 bg-brand-yellow-light px-4 py-3">
+          <p className="text-sm text-brand-navy/65">ดาวน์</p>
           <p className="text-2xl font-bold text-brand-navy">
             ฿{formatPrice(product.downPayment)}
           </p>
@@ -45,7 +45,10 @@ export default function InstallmentTable({
         {terms.map(
           (term) =>
             term.value !== null && (
-              <div key={term.label} className="bg-white px-4 py-3 text-center">
+              <div
+                key={term.label}
+                className="bg-white/90 px-4 py-3 text-center"
+              >
                 <p className="text-xs text-gray-500 mb-0.5">{term.label}</p>
                 <p className="text-xl font-bold text-brand-navy">
                   ฿{formatPrice(term.value)}
@@ -61,7 +64,7 @@ export default function InstallmentTable({
         <div className="p-3 border-t border-gray-200">
           <button
             onClick={onShowCustomer}
-            className="w-full bg-brand-yellow text-brand-navy font-bold py-2.5 rounded-xl hover:bg-brand-yellow-dark transition text-sm"
+            className="lux-btn-primary w-full rounded-xl py-2.5 text-sm font-bold text-brand-navy transition"
           >
             แสดงลูกค้า
           </button>

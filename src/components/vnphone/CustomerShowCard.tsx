@@ -21,11 +21,11 @@ export default function CustomerShowCard({
 
   return (
     <div
-      className="fixed inset-0 z-50 bg-brand-navy flex flex-col items-center justify-center p-6"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[radial-gradient(circle_at_20%_20%,rgba(246,197,83,0.25),transparent_30%),radial-gradient(circle_at_80%_0%,rgba(36,69,142,0.38),transparent_35%),#0c1b40] p-6 backdrop-blur-sm"
       onClick={onClose}
     >
       <div
-        className="text-center animate-scale-in max-w-sm w-full"
+        className="animate-scale-in w-full max-w-sm rounded-3xl border border-white/20 bg-white/10 p-6 text-center backdrop-blur-lg"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Model name */}

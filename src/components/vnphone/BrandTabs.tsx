@@ -23,18 +23,18 @@ export default function BrandTabs({
   onSelect,
 }: BrandTabsProps) {
   return (
-    <div className="flex gap-2 overflow-x-auto pb-2 px-4 -mx-4 scrollbar-hide">
+    <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-2 scrollbar-hide">
       {brands.map((brand) => (
         <button
           key={brand}
           onClick={() => onSelect(brand)}
-          className={`flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium whitespace-nowrap transition ${
+          className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${
             selected === brand
-              ? "bg-brand-navy text-brand-yellow shadow-md"
-              : "bg-white text-gray-600 border border-gray-200 hover:border-brand-navy/30"
+              ? "bg-brand-navy text-brand-yellow shadow-[0_8px_20px_rgba(21,43,99,0.35)]"
+              : "border border-brand-navy/14 bg-white/80 text-gray-600 hover:border-brand-navy/30 hover:bg-white"
           }`}
         >
-          <span>{BRAND_ICONS[brand.toUpperCase()] || "📦"}</span>
+          <span className="mr-1">{BRAND_ICONS[brand.toUpperCase()] || "📦"}</span>
           {brand}
         </button>
       ))}

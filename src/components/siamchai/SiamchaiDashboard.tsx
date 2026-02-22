@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import type { CashProduct, CartItem } from "@/lib/types";
 import { formatPrice } from "@/lib/format";
+import { logActivity } from "@/lib/activity-client";
 import ProductSelector from "./ProductSelector";
 import CartPanel from "./CartPanel";
 import QuoteSummary from "./QuoteSummary";
@@ -29,6 +30,10 @@ export default function SiamchaiDashboard({
   // Cart state
   const [cart, setCart] = useState<CartItem[]>([]);
   const [showQuote, setShowQuote] = useState(false);
+
+  useEffect(() => {
+    void logActivity("view_dashboard", { dashboard: "siamchai_quote" });
+  }, []);
 
   useEffect(() => {
     fetch("/api/sheets/cash")
@@ -64,6 +69,16 @@ export default function SiamchaiDashboard({
     };
 
     setCart((prev) => [...prev, newItem]);
+    void logActivity("add_to_cart", {
+      dashboard: "siamchai_quote",
+      brand: newItem.brand,
+      model: newItem.model,
+      storage: newItem.storage,
+      color: newItem.color,
+      quantity: newItem.quantity,
+      unitPrice: newItem.unitPrice,
+      totalPrice: newItem.totalPrice,
+    });
     // Reset selection
     setColor("");
     setQuantity(1);
@@ -88,6 +103,31 @@ export default function SiamchaiDashboard({
     setShowQuote(false);
   }
 
+  function handleToggleQuote() {
+    setShowQuote((prev) => {
+      const next = !prev;
+      if (next) {
+        const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+        void logActivity("open_quote", {
+          dashboard: "siamchai_quote",
+          itemCount: cart.length,
+          totalPrice: total,
+        });
+      }
+      return next;
+    });
+  }
+
+  function handleQuoteSaved(channel: "share" | "download") {
+    const total = cart.reduce((sum, item) => sum + item.totalPrice, 0);
+    void logActivity("export_quote", {
+      dashboard: "siamchai_quote",
+      channel,
+      itemCount: cart.length,
+      totalPrice: total,
+    });
+  }
+
   if (loading) {
     return (
       <div className="p-4 space-y-3">
@@ -101,7 +141,7 @@ export default function SiamchaiDashboard({
   if (error) {
     return (
       <div className="p-4">
-        <div className="bg-red-50 border border-red-200 text-red-700 rounded-xl p-4 text-center">
+        <div className="glass-card rounded-xl border border-red-200 bg-red-50/80 p-4 text-center text-red-700">
           {error}
         </div>
       </div>
@@ -109,9 +149,16 @@ export default function SiamchaiDashboard({
   }
 
   return (
-    <div className="p-4 max-w-lg mx-auto space-y-4 pb-8">
+    <div className="mx-auto max-w-3xl space-y-4 px-2 pb-8 sm:px-0">
+      <section className="glass-card rounded-2xl p-4">
+        <h2 className="text-lg font-extrabold text-brand-navy">Siamchai Quote Builder</h2>
+        <p className="mt-1 text-sm text-brand-navy/65">
+          เลือกสินค้า ใส่จำนวน และสร้างใบสรุปราคาเพื่อส่งต่อให้ทีม VN Phone
+        </p>
+      </section>
+
       {/* Product Selection */}
-      <div className="bg-white rounded-xl p-4 border border-gray-200">
+      <div className="glass-card rounded-2xl p-4">
         <h3 className="font-bold text-brand-navy mb-3">เลือกสินค้า</h3>
         <ProductSelector
           products={products}
@@ -125,9 +172,9 @@ export default function SiamchaiDashboard({
 
         {/* Show price */}
         {selectedProduct && (
-          <div className="mt-3 p-3 bg-brand-yellow-light rounded-xl">
-            <p className="text-sm text-gray-600">ราคา</p>
-            <p className="text-2xl font-bold text-brand-navy">
+          <div className="mt-3 rounded-xl border border-brand-yellow/50 bg-brand-yellow-light p-3 shadow-[0_10px_24px_rgba(246,197,83,0.2)]">
+            <p className="text-sm text-brand-navy/65">ราคา</p>
+            <p className="text-2xl font-extrabold text-brand-navy">
               ฿{formatPrice(selectedProduct.price)}
             </p>
           </div>
@@ -144,7 +191,7 @@ export default function SiamchaiDashboard({
               value={color}
               onChange={(e) => setColor(e.target.value)}
               placeholder="เช่น Black, White, Natural Titanium"
-              className="w-full px-3 py-2.5 bg-white border border-gray-300 rounded-xl focus:ring-2 focus:ring-brand-yellow focus:border-brand-yellow outline-none text-brand-navy"
+              className="lux-input w-full rounded-xl px-3 py-2.5 text-brand-navy outline-none"
             />
           </div>
         )}
@@ -158,7 +205,7 @@ export default function SiamchaiDashboard({
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-                className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-600 transition"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-navy/15 bg-white/80 text-lg font-bold text-gray-600 transition hover:bg-white"
               >
                 -
               </button>
@@ -167,7 +214,7 @@ export default function SiamchaiDashboard({
               </span>
               <button
                 onClick={() => setQuantity((q) => q + 1)}
-                className="w-10 h-10 rounded-xl bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-lg font-bold text-gray-600 transition"
+                className="flex h-10 w-10 items-center justify-center rounded-xl border border-brand-navy/15 bg-white/80 text-lg font-bold text-gray-600 transition hover:bg-white"
               >
                 +
               </button>
@@ -179,7 +226,7 @@ export default function SiamchaiDashboard({
         {selectedProduct && (
           <button
             onClick={addToCart}
-            className="mt-4 w-full bg-brand-yellow text-brand-navy font-bold py-3 rounded-xl hover:bg-brand-yellow-dark transition"
+            className="lux-btn-primary mt-4 w-full rounded-xl py-3 font-bold text-brand-navy transition"
           >
             เพิ่มในรายการ · ฿
             {formatPrice(selectedProduct.price * quantity)}
@@ -198,8 +245,8 @@ export default function SiamchaiDashboard({
       {cart.length > 0 && (
         <div className="space-y-3">
           <button
-            onClick={() => setShowQuote(!showQuote)}
-            className="w-full bg-brand-navy text-white font-bold py-3 rounded-xl hover:bg-brand-navy-light transition"
+            onClick={handleToggleQuote}
+            className="lux-btn-secondary w-full rounded-xl py-3 font-bold text-white transition"
           >
             {showQuote ? "ซ่อนใบสรุปราคา" : "สรุปราคา"}
           </button>
@@ -207,7 +254,10 @@ export default function SiamchaiDashboard({
           {showQuote && (
             <div className="flex flex-col items-center gap-3 animate-fade-in-up">
               <QuoteSummary items={cart} staffName={staffName} />
-              <SaveImageButton disabled={cart.length === 0} />
+              <SaveImageButton
+                disabled={cart.length === 0}
+                onSaved={handleQuoteSaved}
+              />
             </div>
           )}
         </div>

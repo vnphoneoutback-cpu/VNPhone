@@ -6,16 +6,31 @@ export async function POST(request: NextRequest) {
   try {
     const body = (await request.json()) as RegisterRequest;
     const { first_name, last_name, nickname, email, phone, company } = body;
+    const normalized = {
+      first_name: first_name?.trim(),
+      last_name: last_name?.trim(),
+      nickname: nickname?.trim(),
+      email: email?.trim().toLowerCase(),
+      phone: phone?.trim(),
+      company,
+    };
 
     // Validate required fields
-    if (!first_name || !last_name || !nickname || !email || !phone || !company) {
+    if (
+      !normalized.first_name
+      || !normalized.last_name
+      || !normalized.nickname
+      || !normalized.email
+      || !normalized.phone
+      || !normalized.company
+    ) {
       return NextResponse.json(
         { error: "กรุณากรอกข้อมูลให้ครบ" },
         { status: 400 }
       );
     }
 
-    if (!["vnphone", "siamchai"].includes(company)) {
+    if (!["vnphone", "siamchai"].includes(normalized.company)) {
       return NextResponse.json(
         { error: "บริษัทไม่ถูกต้อง" },
         { status: 400 }
@@ -28,8 +43,8 @@ export async function POST(request: NextRequest) {
     const { data: existingEmail } = await supabase
       .from("staff")
       .select("id")
-      .eq("email", email)
-      .single();
+      .eq("email", normalized.email)
+      .maybeSingle();
 
     if (existingEmail) {
       return NextResponse.json(
@@ -42,8 +57,8 @@ export async function POST(request: NextRequest) {
     const { data: existingPhone } = await supabase
       .from("staff")
       .select("id")
-      .eq("phone", phone)
-      .single();
+      .eq("phone", normalized.phone)
+      .maybeSingle();
 
     if (existingPhone) {
       return NextResponse.json(
@@ -56,12 +71,12 @@ export async function POST(request: NextRequest) {
     const { data, error } = await supabase
       .from("staff")
       .insert({
-        first_name,
-        last_name,
-        nickname,
-        email,
-        phone,
-        company,
+        first_name: normalized.first_name,
+        last_name: normalized.last_name,
+        nickname: normalized.nickname,
+        email: normalized.email,
+        phone: normalized.phone,
+        company: normalized.company,
       })
       .select()
       .single();
